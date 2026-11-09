@@ -1,19 +1,20 @@
-# ECC — Agent Instructions & Orchestration Guide
+# ECC + EGM — Agent Instructions & Orchestration Guide
 
-This project is powered by **ECC (Everything Claude Code / Engine for Coordinated Coding)** tailored for **Google Antigravity CLI (`agy`)**.
+This project is powered by **ECC (Everything Claude Code / Developer Profile)** and **EGM (Elephant-Goldfish Model)** tailored for **Google Antigravity CLI (`agy`)**.
 
-**ECC Version:** 2.2.3  
+**ECC Version:** 2.2.3 (Profile: `developer`)  
+**EGM Version:** 0.1.0 (Plugin: `.agents/plugins/egm/`)  
 **Harness Target:** Antigravity Project (`.agents/`)
 
 ---
 
 ## 1. Core Principles
 
-1. **Agent-First** — Delegate to specialized subagents for distinct domain tasks (`planner`, `architect`, `code-reviewer`, `security-reviewer`, `tdd-guide`, etc.).
-2. **Test-Driven Development (TDD)** — Always write tests first (RED), then minimal code to pass (GREEN), then refactor (REFACTOR). Require $\ge 80\%$ test coverage.
-3. **Security-First** — Never hardcode secrets, API keys, or tokens. Validate all user inputs and sanitize data at boundaries.
-4. **Immutability** — Favor immutable data structures and pure functions; avoid modifying state in-place.
-5. **Plan Before Execute** — Complex tasks or multi-file refactorings must be planned first with explicit risk analysis and phase breakdown.
+1. **Design First (EGM)** — Use deep-context brainstorming (`egm-brainstorm`) and draft specs (`egm-draft`), stress-testing them with zero-context subagents (`egm-review`) before writing code.
+2. **Agent-First Delegation (ECC)** — Delegate distinct implementation and review tasks to specialized subagents (`planner`, `architect`, `code-reviewer`, `security-reviewer`, `tdd-guide`, etc.).
+3. **Test-Driven Development (TDD)** — Always write tests first (RED), then minimal code to pass (GREEN), then refactor (REFACTOR). Require $\ge 80\%$ test coverage.
+4. **Security-First** — Never hardcode secrets, API keys, or tokens. Validate all user inputs and sanitize data at boundaries.
+5. **Immutability** — Favor immutable data structures and pure functions; avoid modifying state in-place.
 6. **Clean Architecture & Small Files** — Keep functions focused (<50 lines) and files compact (typically 200–400 lines, max 800 lines).
 
 ---
@@ -25,24 +26,44 @@ Antigravity CLI discovers workspace customizations located under `.agents/`:
 ```text
 .
 ├── .agents/
-│   ├── agents/                   # 70+ Specialized Subagents (.md)
-│   ├── rules/                    # Normative Rules and Scoped Globs (.md)
-│   ├── skills/                   # Modular Runbooks and Procedures (SKILL.md)
-│   ├── workflows/                # Multi-step Workflow Definitions
-│   └── ecc-install-state.json    # Integrity Manifest for ECC Doctor/Repair
+│   ├── agents/                   # ECC Specialized Subagents (.md)
+│   ├── rules/                    # ECC Rules & Scoped Globs (.md)
+│   ├── skills/                   # ECC Runbooks & Procedures (SKILL.md)
+│   ├── workflows/                # ECC Workflows & Esteiras
+│   ├── plugins/
+│   │   └── egm/                  # EGM Plugin (plugin.json, skills/, agents/, resources/)
+│   ├── plugins.json              # Workspace Plugin Registration
+│   └── ecc-install-state.json    # ECC Integrity Manifest
 ├── AGENTS.md                     # Root Orchestration Instructions (this file)
+├── EGM-ECC process.md            # Detailed Lifecycle Workflow Guide
 └── ... (Source Code)
 ```
 
 ---
 
-## 3. Specialized Agents Catalog
+## 3. Specialized Agents & Personas Catalog
 
 All agents are accessible via `invoke_subagent` in fresh, isolated contexts or via the CLI (`agy agents`):
 
+### 3.1. EGM Goldfish Reviewers (Zero-Context Design Audit)
+
+| Agent | Purpose | Phase / When to Use |
+| :--- | :--- | :--- |
+| `egm-zoom-out` | High-altitude simplicity, minimalism, YAGNI, codebase reuse | Phase 1 & 4 of EGM Review |
+| `egm-comprehension` | Naive reader, flags undefined terms, acronyms, mental jumps | Phase 2 of EGM Review |
+| `egm-design` | Hostile critic on architecture, scalability, infrastructure economics, risks | Phase 3 of EGM Review |
+| `egm-codebase-details` | Technical auditor verifying specs match actual code and reusable libraries | Phase 3 of EGM Review |
+| `egm-style` | Copy editor for clarity, precision, brevity, objective framing | Phase 3 of EGM Review |
+| `egm-structural` | Structural layout validator, hierarchy, formatting, template compliance | Phase 3 of EGM Review |
+| `egm-implementation-readiness` | Tech lead verifying actionable steps without deferred design decisions | Phase 5 of EGM Review |
+| `egm-synthesizer` | Aggregator coordinating goldfish passes and compiling reports | EGM review compilation |
+| `egm-bootstrap-orchestrator` | Orchestrates directory READMEs and subtrees documentation | Documentation bootstrapping |
+
+### 3.2. ECC Engineering Specialists
+
 | Agent | Purpose | When to Delegate |
 | :--- | :--- | :--- |
-| [`planner`](.agents/agents/planner.md) | Feature decomposition & planning | Complex tasks, architecture redesigns |
+| [`planner`](.agents/agents/planner.md) | Feature decomposition & implementation planning | Complex tasks, architecture redesigns |
 | [`architect`](.agents/agents/architect.md) | Distributed system design & scalability | High-level system decisions, tradeoffs |
 | [`tdd-guide`](.agents/agents/tdd-guide.md) | Test-driven development enforcement | Writing new features, fixing regressions |
 | [`code-reviewer`](.agents/agents/code-reviewer.md) | Static analysis & code quality | Immediately after any code edit |
@@ -57,37 +78,49 @@ All agents are accessible via `invoke_subagent` in fresh, isolated contexts or v
 | [`typescript-reviewer`](.agents/agents/typescript-reviewer.md) | TypeScript & Node.js code review | TypeScript / JavaScript changes |
 | [`go-reviewer`](.agents/agents/go-reviewer.md) | Idiomatic Go patterns & concurrency | Go code changes |
 | [`rust-reviewer`](.agents/agents/rust-reviewer.md) | Rust ownership & safety review | Rust code changes |
-| [`react-reviewer`](.agents/agents/react-reviewer.md) | React hooks & render performance | React components & JSX |
-| [`vue-reviewer`](.agents/agents/vue-reviewer.md) | Vue Composition API & reactivity | Vue single-file components |
 
 ---
 
-## 4. Proactive Agent Orchestration Map
+## 4. Integrated Lifecycle Workflow (EGM $\rightarrow$ ECC)
 
-The orchestrator should invoke specialists proactively without waiting for explicit prompt commands:
+```mermaid
+flowchart TD
+    subgraph EGM_Design["1. Concepção & Design (EGM)"]
+        A["Ideia / Requisito"] --> B["/egm-brainstorm"]
+        B --> C["concepts_brief.md"]
+        C --> D["/egm-draft"]
+        D --> E["design_draft.md"]
+        E --> F["/egm-review (Goldfish Swarm)"]
+        F --> G["Spec Aprovada sem Incertezas"]
+    end
 
-* **Complex Feature Request** $\rightarrow$ Delegate to [`planner`](.agents/agents/planner.md).
-* **Writing / Modifying Code** $\rightarrow$ Delegate to [`tdd-guide`](.agents/agents/tdd-guide.md) then [`code-reviewer`](.agents/agents/code-reviewer.md).
-* **Compilation / Type Error** $\rightarrow$ Delegate to [`build-error-resolver`](.agents/agents/build-error-resolver.md) or language-specific resolver.
-* **Sensitive Code / Auth / Input Handling** $\rightarrow$ Delegate to [`security-reviewer`](.agents/agents/security-reviewer.md).
-* **Architecture / Database Changes** $\rightarrow$ Delegate to [`architect`](.agents/agents/architect.md) or [`database-reviewer`](.agents/agents/database-reviewer.md).
+    subgraph ECC_Execution["2. Implementação & Qualidade (ECC)"]
+        G --> H["Planejamento TDD (planner / tdd-guide)"]
+        H --> I["Implementação Red-Green-Refactor"]
+        I --> J["Auditoria de Código (code-reviewer & security-reviewer)"]
+        J --> K["/egm-drift-report (Checagem de Deriva)"]
+    end
+```
 
 ---
 
-## 5. Development Workflow (TDD)
+## 5. Skills Rápidas do EGM
 
-1. **RED**: Write a failing behavioral test verifying the desired functionality.
-2. **GREEN**: Implement minimal code necessary to satisfy the test.
-3. **REFACTOR**: Clean up code, enforce readability and modularity, and verify test coverage $\ge 80\%$.
-4. **REVIEW**: Proactively run `code-reviewer` and `security-reviewer`.
+Disponíveis como slash commands ou via prompt:
+
+- `/egm-brainstorm <tópico>`: Concepção de ideia e alinhamento de premissas com revisores imparciais.
+- `/egm-draft`: Redação guiada seção a seção do Design Doc técnico.
+- `/egm-review <arquivo>`: Execução do Goldfish Review Protocol com subagentes isolados.
+- `/egm-resolve`: Resolução e incorporação de apontamentos de revisão no documento.
+- `/egm-drift-report`: Comparação do código implementado com o Design Doc aprovado.
 
 ---
 
-## 6. ECC Maintenance Commands
+## 6. Comandos de Manutenção
 
-Execute via terminal inside this repository:
+Execute no terminal dentro do repositório:
 
-* **Health Check**: `npx ecc-universal doctor --target antigravity`
-* **Restore Drifted Files**: `npx ecc-universal repair --target antigravity`
-* **Memory Management**: `npx ecc-universal memory init`
-* **Agent List**: `agy agents`
+* **Auditoria de Plugins**: `agy plugin list`
+* **Auditoria de Subagentes**: `agy agents`
+* **Auditoria de Saúde ECC**: `npx ecc-universal doctor --target antigravity`
+* **Reparo ECC**: `npx ecc-universal repair --target antigravity`
