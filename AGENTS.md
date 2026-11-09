@@ -35,7 +35,8 @@ Antigravity CLI discovers workspace customizations located under `.agents/`:
 │   ├── plugins.json              # Workspace Plugin Registration
 │   └── ecc-install-state.json    # ECC Integrity Manifest
 ├── AGENTS.md                     # Root Orchestration Instructions (this file)
-├── EGM-ECC process.md            # Detailed Lifecycle Workflow Guide
+├── EGM-ECC process.md            # Detailed Lifecycle Workflow Guide (Enterprise)
+├── quickstart.md                 # Fast-Track Specification & Lightweight Flow Guide
 └── ... (Source Code)
 ```
 
