@@ -1,4 +1,4 @@
-# Workspace de Engenharia Assistida por IA: ECC + EGM (Antigravity CLI)
+# Desenvolvimento Assistido por IA: ECC + EGM (Antigravity CLI)
 
 Bem-vindo ao ambiente de desenvolvimento de software governado pela união do **ECC (*Everything Claude Code / Developer Profile*)** e do **EGM (*Elephant-Goldfish Model*)**, especificamente preparado e calibrado para o **Google Antigravity CLI (`agy`)**.
 
