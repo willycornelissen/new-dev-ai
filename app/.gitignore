@@ -1,0 +1,6 @@
+# Binaries
+/new-dev-ai
+/new-dev-ai.exe
+
+# Test coverage
+/coverage.out

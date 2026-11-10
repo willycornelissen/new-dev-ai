@@ -53,7 +53,6 @@ flowchart TD
 │   └── ecc-install-state.json    # Manifesto de Integridade e Auditoria do ECC
 ├── AGENTS.md                     # Diretrizes Globais de Orquestração para o Antigravity
 ├── EGM-ECC process.md            # Guia Detalhado do Ciclo de Vida da Engenharia (Enterprise)
-├── quickstart.md                 # Guia Rápido de Especificação e Desenvolvimento Ágil (Fast-Track)
 ├── README.md                     # Documentação e Manual do Workspace (este arquivo)
 └── .gitignore                    # Regras de Exclusão do Git
 ```
@@ -128,9 +127,6 @@ agy -p "Rode a checagem de integridade com o ecc doctor"
 ---
 
 ### 4.2. Fluxo de Trabalho Recomendado: Da Ideia ao Commit
-
-> [!TIP]
-> **Aplicações Simples ou Utilitários?** Se você estiver construindo uma aplicação simples, script, CLI ou MVP que não exige o ciclo cerimonial completo de 7 passos do [`EGM-ECC process.md`](file:///home/willycornelissen/Desktop/Dablio/new-pp/EGM-ECC%20process.md), consulte o [`quickstart.md`](file:///home/willycornelissen/Desktop/Dablio/new-pp/quickstart.md) para o processo ágil de especificação direta e entrega em 4 passos.
 
 #### Passo 1: Concepção da Ideia (EGM)
 Para demandas que exigem decisões arquiteturais, execute:
